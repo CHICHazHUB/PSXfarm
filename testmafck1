@@ -128,7 +128,7 @@ end
 
 local function tryPurchase(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp, snipeNormal)
     if buytimestamp > listTimestamp then
-      task.wait(3.45 - Players.LocalPlayer:GetNetworkPing())
+      task.wait(3.5 - Players.LocalPlayer:GetNetworkPing())
     end
     local boughtPet, boughtMessage = game:GetService("ReplicatedStorage").Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
     processListingInfo(uid, gems, item, version, shiny, amount, username, boughtPet, class, boughtMessage, snipeNormal)
@@ -164,7 +164,7 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
                 local unitGems = gems/amount
 		snipeNormal = false
                                  
-                 if (string.find(item, "Huge") and not string.find(item, "Huge Potion")) and unitGems <= 1000000 then
+                 if (string.find(item, "Huge") and not string.find(item, "Huge Potion")) and unitGems <= 50000 then
                     coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp, snipeNormal)
                     return
                 elseif class == "Pet" then
