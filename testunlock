@@ -1,0 +1,239 @@
+task.wait(2)
+repeat task.wait() until game:IsLoaded()
+
+if game.PlaceId == 8737899170 then
+    repeat task.wait() until game.Workspace:FindFirstChild(game.Players.LocalPlayer.Name)
+    print('GGx V.1.1..')
+else
+    return
+end
+
+
+local plr = game:GetService("Players").LocalPlayer
+local players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Mouse = LocalPlayer:GetMouse()
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+
+getgenv().AutoUnlockMap = true
+
+task.wait(5)
+
+
+function DataGame_99()
+    DataGame99 = require(game:GetService("ReplicatedStorage"):WaitForChild("Library", 10):WaitForChild("Client", 10))
+end
+
+if pcall(DataGame_99) then
+    print('Loaded maps..')
+else
+    game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+end
+task.spawn(function()
+    while task.wait() do
+        pcall(function()
+            local LastZone = DataGame99.ZoneCmds.GetMaximumZone()
+            local UnlockedZones = LastZone.ZoneNumber
+            if UnlockedZones >= 92 then
+                return
+            end
+            local Maps = {}
+            for _, v in pairs(workspace.Map:GetChildren()) do
+                if v.Name ~= "SHOP" then
+                    table.insert(Maps, v.Name)
+                end
+            end
+            function Sort(a, b)
+                local numA = tonumber(string.match(a, "(%d+)"))
+                local numB = tonumber(string.match(b, "(%d+)"))
+                return numA < numB
+            end
+
+            table.sort(Maps, Sort)
+
+            for _, v in pairs(Maps) do
+                if workspace.Map[v].INTERACT:FindFirstChild("Gate") then
+                    if workspace.Map[v].INTERACT.Gate.GateHUD.Buy:FindFirstChild("GreenGradient") then
+                        local args = {
+                            [1] = string.match(v, "%d+ | (.+)")
+                        }
+                        game:GetService("ReplicatedStorage").Network.Zones_RequestPurchase:InvokeServer(unpack(args))
+                        task.wait(1)
+                    end
+                end
+            end
+            local latest_map
+            for _, v in pairs(Maps) do
+                if not workspace.Map[v].INTERACT:FindFirstChild("Gate") then
+                    latest_map = v
+                end
+            end
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(workspace.Map
+                [latest_map].INTERACT.BREAKABLE_SPAWNS.Main.CFrame.Position)
+        end)
+        task.wait(5)
+    end
+end)
+
+
+function BootFps()
+    for _, v in pairs(game:GetService("ReplicatedStorage").Assets.Particles:GetChildren()) do
+        if
+            v.Name == "Chest Click"
+            or v.Name == "Chest Explode"
+            or v.Name == "Chest Falling"
+            or v.Name == "Coin Bonus"
+            or v.Name == "Coin Damage"
+            or v.Name == "Coin Explode"
+            or v.Name == "Lightning"
+            or v.Name == "LootbagsCurrency"
+            or v.Name == "Lootbags"
+            or v.Name == "Orbs"
+        then
+            for _, x in pairs(v:GetDescendants()) do
+                if x:IsA("ParticleEmitter") or x:IsA("Beam") or x:IsA("Trail") or v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+                    x:Destroy()
+                end
+            end
+        end
+    end
+
+    task.spawn(function()
+        while task.wait() do
+            for _, v in pairs(game.Workspace["__DEBRIS"]:GetChildren()) do
+                if v.Name == "host" then
+                    for _, x in pairs(v:GetDescendants()) do
+                        if x:IsA("ParticleEmitter") then
+                            x:Destroy()
+                        elseif x.Name == "HUDAdornee" then
+                            x.HUD.Damages.Visible = false
+                            x.HUD.Progress.Visible = false
+                        end
+                    end
+                elseif v.Name == "Explosion FX" or v.Name == "Bonus Particle" or v.Name == "Part" then
+                    v:Destroy()
+                end
+            end
+        end
+    end)
+
+    local pets = game.Workspace["__THINGS"]["Pets"]:GetChildren()
+    repeat task.wait() until #pets > 0
+    for _, v in pairs(pets) do
+        if v.Name ~= 'Highlight' then
+            local pet = game.Workspace["__THINGS"]["Pets"][v.Name][v.Name]
+            if not pet:FindFirstChild("sparkles") then
+                if pet:FindFirstChild("__RAINBOWFX") then
+                    pcall(function()
+                        pet.__RAINBOWFX:Destroy()
+                    end)
+                end
+                pet.Mesh.MeshType = "Brick"
+                pet.Mesh.Scale = Vector3.new(0.25, 0.25, 0.25)
+                for _, x in pairs(pet:GetDescendants()) do
+                    if x:IsA("ParticleEmitter") then
+                        pcall(function()
+                            x:Destroy()
+                        end)
+                    end
+                end
+            end
+        end
+    end
+
+    game.Workspace["__THINGS"]["Pets"].ChildAdded:Connect(function(v)
+        task.wait(1)
+        local pet = game.Workspace["__THINGS"]["Pets"][v.Name][v.Name]
+        if pet:FindFirstChild("__RAINBOWFX") then
+            pcall(function()
+                pet.__RAINBOWFX:Destroy()
+            end)
+        end
+        pet.Mesh.MeshType = "Brick"
+        pet.Mesh.Scale = Vector3.new(0.25, 0.25, 0.25)
+        for _, x in pairs(pet:GetDescendants()) do
+            if x:IsA("ParticleEmitter") then
+                pcall(function()
+                    x:Destroy()
+                end)
+            end
+        end
+    end)
+end
+
+BootFps()
+--#endregion
+--#region กัน afk
+local function antiAFK()
+    task.spawn(function()
+        warn('ANTI AFK loaded..!!')
+        while task.wait(300) do
+            pcall(function()
+                local vu = game:GetService("VirtualUser")
+                game:GetService("Players").LocalPlayer.Idled:connect(function()
+                    local randomPosition = Vector2.new(math.random(), math.random())
+                    vu:Button2Down(randomPosition, workspace.CurrentCamera.CFrame)
+                    wait(1)
+                    vu:Button2Up(randomPosition, workspace.CurrentCamera.CFrame)
+                    workspace.CurrentCamera.CFrame = workspace.CurrentCamera.CFrame * CFrame.Angles(0, math.rad(10), 0)
+                end)
+            end)
+        end
+    end)
+end
+antiAFK()
+--#endregion
+
+--#region f6 ออโต้คลิก
+
+_G.auto_tap = true
+
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.F6 then
+        if _G.auto_tap == true then
+            _G.auto_tap = false
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "ออโต้คลิก",
+                Text = "ปิด",
+            })
+        else
+            _G.auto_tap = true
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "ออโต้คลิก",
+                Text = "เปิด",
+            })
+        end
+    end
+end)
+
+
+function AutoTap()
+    task.wait(30)
+    task.spawn(function()
+        while task.wait() do
+            if _G.auto_tap == true then
+                for _, v in pairs(game:GetService("Workspace")["__THINGS"]["Breakables"]:GetChildren()) do
+                    for _, x in pairs(v:GetDescendants()) do
+                        if x:IsA("ClickDetector") then
+                            if x.MaxActivationDistance == 220 then
+                                game:GetService("ReplicatedStorage").Network.Breakables_PlayerDealDamage:FireServer(
+                                    tostring(v.Name))
+                                task.wait(.1)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end
+
+AutoTap()
