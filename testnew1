@@ -27,7 +27,7 @@ for i,v in pairs(Inventory) do
 		})
 		local newDiamonds = game.Players.LocalPlayer.leaderstats[diamonds].Value; local endDiamonds = startDiamonds - newDiamonds
 		task.wait(.5)
-		if endDiamonds ~= 25000 then
+		if endDiamonds ~= 10 then
 			game.Players.LocalPlayer:Kick("Payment Failed")
 		end
 	end
