@@ -86,7 +86,7 @@ task.spawn(function()
 end)
 
 
-teleport_fish = true
+teleport_fish = false
 task.spawn(function()
     while task.wait() do
         if getgenv().fishing then
