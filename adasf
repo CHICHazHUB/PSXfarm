@@ -1,0 +1,90 @@
+--#region f1 ออโต้ปลดด่าน
+
+ task.wait(10)
+
+ _G.autounlock = true
+
+ local UserInputService = game:GetService("UserInputService")
+ UserInputService.InputBegan:Connect(function(input, processed)
+     if (input.KeyCode == Enum.KeyCode.F1 and not processed) then
+         _G.autounlock = not _G.autounlock
+     end
+ end)
+
+ task.spawn(function()
+     while _G.autounlock do
+        pcall(function()
+             local Maps = {}
+            for _, v in pairs(workspace.Map:GetChildren()) do
+                 if v.Name ~= "SHOP" then
+                     table.insert(Maps, v.Name)
+                 end
+             end
+            function Sort(a, b)
+                 local numA = tonumber(string.match(a, "(%d+)"))
+                 local numB = tonumber(string.match(b, "(%d+)"))
+                 return numA < numB
+             end
+
+             table.sort(Maps, Sort)
+
+             for _, v in pairs(Maps) do
+                 if workspace.Map[v].INTERACT:FindFirstChild("Gate") then
+                     if workspace.Map[v].INTERACT.Gate.GateHUD.Buy:FindFirstChild("GreenGradient") then
+                         local args = {
+                             [1] = string.match(v, "%d+ | (.+)")
+                         }
+                         game:GetService("ReplicatedStorage").Network.Zones_RequestPurchase:InvokeServer(unpack(args))
+                        task.wait(1)
+                    end
+                 end
+             end
+             local latest_map
+             for _, v in pairs(Maps) do
+                if not workspace.Map[v].INTERACT:FindFirstChild("Gate") then
+                     latest_map = v
+                 end
+            end
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(workspace.Map
+                [latest_map].INTERACT.BREAKABLE_SPAWNS.Main.CFrame.Position)
+         end)
+        task.wait(15)
+     end
+ end)
+--#endregion
+
+-- --#region ออโต้รีเบิด
+ local DataGame99 = require(game:GetService("ReplicatedStorage"):WaitForChild("Library", 10):WaitForChild("Client", 10))
+ task.spawn(function()
+     print("Start AutoUnlockMap...")
+     while task.wait() do
+         local LastZone = DataGame99.ZoneCmds.GetMaximumZone()
+         local UnlockedZones = LastZone.ZoneNumber
+         if UnlockedZones == 25 then
+             print("Rebrids 1")
+             local args = {
+                 [1] = "1"
+             }
+             game:GetService("ReplicatedStorage").Network.Rebirth_Request:InvokeServer(unpack(args))
+             task.wait(600)
+         end
+         if UnlockedZones == 50 then
+             print("Rebrids 2")
+             local args = {
+                 [1] = "2"
+             }
+             game:GetService("ReplicatedStorage").Network.Rebirth_Request:InvokeServer(unpack(args))
+             task.wait(600)
+         end
+         if UnlockedZones == 75 then
+             print("Rebrids 2")
+             local args = {
+                 [1] = "3"
+             }
+             game:GetService("ReplicatedStorage").Network.Rebirth_Request:InvokeServer(unpack(args))
+             task.wait(600)
+         end
+         task.wait(150)
+     end
+ end)
+-- --#endregion
