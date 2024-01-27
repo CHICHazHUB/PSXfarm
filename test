@@ -1,0 +1,171 @@
+repeat task.wait() until game:IsLoaded()
+local Library = loadstring(game:HttpGet("https://pastebin.com/raw/BDKLcnaD"))()
+local kittyware = Library:CreateWindow("kittyware😼")
+local Players = game:GetService("Players"); local Player = Players.LocalPlayer; local hum = Player.Character.HumanoidRootPart
+local RepStor = game:GetService("ReplicatedStorage"); local Network = RepStor:WaitForChild("Network")
+local Active = workspace.__THINGS.__INSTANCE_CONTAINER.Active; local Instances = workspace.__THINGS.Instances
+local hiddenPresentsFolder = game:GetService("Workspace").__THINGS.HiddenPresents; local ht = game:GetService("HttpService")
+local r = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Hidden Presents: Found")
+local function getRod() return Player.Character and Player.Character:FindFirstChild("Rod", true) end
+local vu = game:GetService("VirtualUser"); local gameLibrary = RepStor:WaitForChild("Library")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+	vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+	wait(1)
+	vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
+local areasToFish = {"Fishing", "AdvancedFishing"}
+kittyware:Dropdown("Area to autoFish", {flag = 'areatoautoFish', search = false, default = _G.Area, list = areasToFish})
+kittyware:Button("tp to place", function()
+	local placetoTP = Active:FindFirstChild(kittyware.flags.areatoautoFish)
+	if placetoTP then
+		game:GetService("StarterGui"):SetCore("SendNotification",{
+			Title = "Teleport Error", -- Required
+			Text = "you're already here.. go to main map", -- Required
+		})
+	else
+		hum.CFrame = Instances[kittyware.flags.areatoautoFish].Teleports.Enter.CFrame
+	end
+end)
+local presentsRun = 0
+local whentoRun = 1
+function getPresents()
+	presentsRun = presentsRun + 1
+	local teleport = Vector3.new(0,0,0)
+	local counter = 0
+	for ind,val in pairs(Active:GetChildren()) do
+		if val.Name == "Fishing" then
+			hum.CFrame = CFrame.new(teleport + Vector3.new(1052.435, 80.236, -3441.187))
+		elseif val.Name == "AdvancedFishing" then
+			hum.CFrame = CFrame.new(teleport + Vector3.new(1337.605, 63.042, -4443.654))
+		end
+	end
+	task.wait(1)
+	hum.Anchored = true
+	while counter < 5 do
+		for _, present in pairs(hiddenPresentsFolder:GetChildren()) do
+			if present.Name ~= "Highlight" then
+				counter = counter + 1
+				local c = "ID_"
+				for i,v in string.split(tostring(present.Position,", ")) do
+					c..= string.format("%.6f",v).."_"
+				end
+				task.wait(0.5)
+				local a,b = r:InvokeServer(string.sub(c,1,#c-1))
+				task.wait(0.5)
+			end
+		end
+	end
+	hum.Anchored = false
+	hum.CFrame = Instances[kittyware.flags.areatoautoFish].Teleports.Enter.CFrame
+	task.wait(3)
+	whentoRun = whentoRun + 1 
+end 
+if _G.Enabled then -- cuz the tp is a button can't automate it unless i do this xD
+	task.wait(2)
+	hum.CFrame = Instances[kittyware.flags.areatoautoFish].Teleports.Enter.CFrame
+	task.wait(2.5)
+end
+local http = game:GetService("HttpService")
+webhookUrl = "https://discord.com/api/webhooks/1199371457659146401/XJW6CUtTNBcSxXYC0VlZ1ZDdlpw_IJZ7cL35lW5JfQaDJFKVeaEc4oOTeTUssrFTfnTO"   
+
+function sendNotif(class, id, amount, tier)
+	local itemMessage = "kittyware #meow global reels 👀"
+	local fields = {}
+	local color = tonumber(0xff00ff)
+	if class == "Currency" then
+		color = tonumber(0xff9900)
+	elseif class == "Potion" then
+		color = tonumber(0xb67ab8)
+	elseif class == "Misc" then
+		color = tonumber(0x00ff00)
+	end
+	if class then
+		table.insert(fields, {
+			name  = "Class",
+			value = class,
+			inline = true
+		})
+	end
+	if id then
+		table.insert(fields, {
+			name  = "ID",
+			value = id,
+			inline = true
+		})
+	end
+	if tier then
+		table.insert(fields, {
+			name  = "Tier",
+			value = "tier "..tier,
+			inline = true
+		})
+	end
+	if amount then
+		table.insert(fields, {
+			name  = "Amount",
+			value = "x"..amount,
+			inline = true
+		})
+	end
+	local message = {
+		embeds = {
+			{
+				title = itemMessage,
+				color = color,
+				timestamp = DateTime.now():ToIsoDate(),
+				fields = fields
+			}
+		}
+	}
+	http:PostAsync(webhookUrl, http:JSONEncode(message), Enum.HttpContentType.ApplicationJson)
+end
+
+local advancedfishingMod = require(workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedFishing.ClientModule)
+local advancedSuccess = advancedfishingMod.Networking.FishingSuccess
+advancedfishingMod.Networking.FishingSuccess = function(...)
+	local args = {...}; local iteminfo = args[4]
+	print(iteminfo.class, iteminfo.data.id, iteminfo.data._am, iteminfo.data.tn)
+	if iteminfo and iteminfo.class then
+		sendNotif(iteminfo.class, iteminfo.data.id, iteminfo.data._am, iteminfo.data.tn)
+	end
+
+	return advancedSuccess(table.unpack(args))
+end
+
+kittyware:Toggle("auto fish area", {flag = 'autoFish', default = _G.Enabled}, function()
+	while kittyware.flags.autoFish do 
+		local startTime = os.time()
+		repeat
+			if kittyware.flags.areatoautoFish == "Fishing" then
+				Network.Instancing_FireCustomFromClient:FireServer("Fishing", "RequestCast", Vector3.new(1156.641, 72.232, -3444.063))
+				task.wait(3.5)
+				Network.Instancing_FireCustomFromClient:FireServer("Fishing", "RequestReel")
+				game.Players.LocalPlayer.PlayerGui._INSTANCES.FishingGame.Enabled = false
+				while getRod().Parent.Bobber.Transparency > 0 do
+					task.wait()
+					if whentoRun > presentsRun then
+						Network.Instancing_InvokeCustomFromClient:InvokeServer("Fishing", "Clicked")
+					end
+				end
+			elseif kittyware.flags.areatoautoFish == "AdvancedFishing" then
+				Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1478.681, 61, -4452.863))
+				task.wait(3.5)
+				Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
+				while getRod().Parent.Bobber.Transparency > 0 do
+					task.wait() 
+					if whentoRun > presentsRun then
+						Network.Instancing_InvokeCustomFromClient:InvokeServer("AdvancedFishing", "Clicked")
+					end
+				end
+			end
+			local elapsedTime = os.time() - startTime
+			if elapsedTime >= 305 then
+				getPresents()
+				startTime = os.time()
+			end
+		until not kittyware.flags.autoFish
+	end
+end)
+kittyware:Section('@nazov')
+kittyware:Section('.gg/SRwvQWWSAd')
