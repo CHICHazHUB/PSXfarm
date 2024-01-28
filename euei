@@ -627,6 +627,9 @@ task.spawn(function()
             for key, value in pairs(HiddenPresents:GetChildren()) do
                 if value.Name == 'HiddenPresent' then
                     value.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                    VirtualInputManager:SendMouseButtonEvent(X, Y, 0, true, game, 1)
+                    VirtualInputManager:SendMouseButtonEvent(X, Y, 0, false, game, 1)
+                    humanoidRootPart.Anchored = true
                     task.wait()
                 end
             end
