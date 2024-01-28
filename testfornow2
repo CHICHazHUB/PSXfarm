@@ -9,7 +9,6 @@ else
     return
 end
 
-local Camera = Workspace.CurrentCamera
 local plr = game:GetService("Players").LocalPlayer
 local players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -22,7 +21,6 @@ local Mouse = LocalPlayer:GetMouse()
 local ReplicatedFirst = game:GetService("ReplicatedFirst")
 local playerGui = LocalPlayer:WaitForChild("PlayerGui")
 local VirtualInputManager = game:GetService("VirtualInputManager")
-local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 
 getgenv().fishing = true
 getgenv().AutoUnlockMap = false
