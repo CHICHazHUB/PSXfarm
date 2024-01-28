@@ -593,15 +593,13 @@ task.spawn(function()
                 if value.Name == 'HiddenPresent' then
                     value.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
                      wait(0.1)
-
-                    VirtualInputManager:SendMouseButtonEvent(X, Y, 0, true, game, 1)
-                    VirtualInputManager:SendMouseButtonEvent(X, Y, 0, false, game, 1)
-                    humanoidRootPart.Anchored = true
                     task.wait()
                 end
             end
             local box_bla = game:GetService("Workspace")["__THINGS"].HiddenPresents:FindFirstChild('HiddenPresent')
             if box_bla then
+        VirtualInputManager:SendMouseButtonEvent(X, Y, 0, true, game, 1)
+        VirtualInputManager:SendMouseButtonEvent(X, Y, 0, false, game, 1)
                 task.wait(1)
             else
                 break
