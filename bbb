@@ -7,12 +7,13 @@ Data = require(game.ReplicatedStorage.Library.Client.Save)
 Zones = require(game.ReplicatedStorage.Library.Directory.Zones)
 Eggs = require(game.ReplicatedStorage.Library.Directory.Eggs)
 
+local module = loadstring(game:HttpGet"https://raw.githubusercontent.com/LeoKholYt/roblox/main/lk_serverhop.lua")()
+
 function FetchData(name)
     return Data:GetSaves()[game.Players.LocalPlayer][name]
 end 
 table.foreach(FetchData("Goals"), function(i,v) table.foreach(v , print) end)
 
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(215.1314697265625, 28.358858108520508, -656.6474609375)
 wait(1)
 
 function GetLastZone()
