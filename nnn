@@ -1,5 +1,5 @@
 function mainPremium()
-    getgenv().Config = {
+    getgenv().Config = {}
 
     repeat
         task.wait()
@@ -1715,6 +1715,5 @@ function autoIndex()
     end
 end
 end
-}
 Update_Config('Chichaz')
 mainPremium()
