@@ -1,0 +1,91 @@
+while getgenv().config.autoPlant do task.wait()
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 1,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 2,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 3,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 4,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 5,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 6,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 7,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 8,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 9,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    
+    local args = {
+        [1] = "FlowerGarden",
+        [2] = "PlantSeed",
+        [3] = 10,
+        [4] = "Diamond"
+    }
+    
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+    end
