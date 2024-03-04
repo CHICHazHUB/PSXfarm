@@ -1,0 +1,76 @@
+local Remote = game.ReplicatedStorage.Network.Instancing_InvokeCustomFromClient
+local saveModule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
+local result = saveModule.Get()
+local Remote = game.ReplicatedStorage.Network.Instancing_InvokeCustomFromClient
+local Lib = require(game.ReplicatedStorage:WaitForChild("Library").Client)
+local Lib_ = require(game.ReplicatedStorage:WaitForChild("Library"))
+local HttpService = game:GetService("HttpService")
+
+if getgenv().config.TPGarden then
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(176.87, 23.35, 1993.71)
+    task.wait(3)
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-450.63, 110.38, -1399.75)
+    while getgenv().config.autoDoallseed do task.wait()
+        local Remote = game.ReplicatedStorage.Network.Instancing_InvokeCustomFromClient
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 1, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 1)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 1)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 2, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 2)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 2)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 3, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 3)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 3)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 4, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 4)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 4)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 5, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 5)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 5)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 6, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 6)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 6)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 7, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 7)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 7)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 8, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 8)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 8)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 9, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 9)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 9)
+                Remote:InvokeServer("FlowerGarden", "PlantSeed", 10, "Diamond")
+                Remote:InvokeServer("FlowerGarden", "WaterSeed", 10)
+                Remote:InvokeServer("FlowerGarden", "ClaimPlant", 10)
+            end
+end
+
+if getgenv().config.AFK then
+    local VirtualInputManager = game:GetService("VirtualInputManager")
+    while task.wait() do
+        VirtualInputManager:SendKeyEvent(true, "Space", false, game)
+        task.wait(.2)
+        VirtualInputManager:SendKeyEvent(false, "Space", false, game)
+        task.wait(300)
+    end
+end
+
+if getgenv().config.autoLoot then
+    local a = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local b = workspace.__THINGS
+    
+    local function get()
+        local cf = a.CFrame
+        for i,v in pairs(b.Lootbags:GetChildren()) do
+        v:PivotTo(cf)
+        end
+        for i,v in pairs(b.Orbs:GetChildren()) do
+        v:PivotTo(cf)
+    
+        end
+    end
+    
+    while task.wait(0.5) do
+    get()
+    end
+end
